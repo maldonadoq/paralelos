@@ -1,0 +1,2 @@
+# Paralelos
+Algoritmos Paralelos 
