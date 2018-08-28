@@ -39,7 +39,7 @@ void blocked_mult(T **a, T **b, T **r, unsigned t, unsigned bl){
 typedef int type;
 int main(int argc, char const *argv[]){
 
-	unsigned t = 400, bl = 6;
+	unsigned t = 512, bl = 32;
 	type **a = new type*[t];
 	type **b = new type*[t];
 	type **r = new type*[t];
