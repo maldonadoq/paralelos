@@ -18,6 +18,7 @@ void init(T **a, T **b, T **r, unsigned t){
 	}
 }
 
+// 5 for
 template<class T>
 void block(T **a, T **b, T **r, unsigned t, unsigned bl){
 	unsigned i,j,k,jj,kk;
