@@ -32,7 +32,7 @@ void normal_mult(T **a, T **b, T **r, unsigned t){
 typedef int type;
 int main(int argc, char const *argv[]){
 
-	unsigned t = 400;
+	unsigned t = 512;
 	type **a = new type*[t];
 	type **b = new type*[t];
 	type **r = new type*[t];
