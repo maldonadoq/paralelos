@@ -15,17 +15,23 @@ void print(T **a, unsigned t){
 }
 
 template<class T>
-void init(T **a, T **b, T **r1, T **r2, unsigned t){
+void init_m(T **a, T **b, unsigned t){
 	for(unsigned i=0; i<t; i++){
 		a[i] = new T[t];
 		b[i] = new T[t];
-		r1[i] = new T[t];
-		r2[i] = new T[t];
 		for(unsigned j=0; j<t; j++){
 			a[i][j] = (T)rand()%10;
 			b[i][j] = (T)rand()%10;
-			r1[i][j] = 0;
-			r2[i][j] = 0;
+		}
+	}
+}
+
+template<class T>
+void init_r(T **a, unsigned t){
+	for(unsigned i=0; i<t; i++){
+		a[i] = new T[t];
+		for(unsigned j=0; j<t; j++){
+			a[i][j] = 0;
 		}
 	}
 }
@@ -60,36 +66,47 @@ void blocked_mult(T **a, T **b, T **r, unsigned t, unsigned bl){
 }
 
 typedef int type;
-int main(int argc, char const *argv[]){
+int main(int argc, char const *argv[]){	
 
-	unsigned t = 400, bl = 6;
-	type **a = new type*[t];
-	type **b = new type*[t];
-	type **r1 = new type*[t];
-	type **r2 = new type*[t];
+	/*struct timeval ti, tf;
+	double ttime;	
 
-	init(a,b,r1,r2,t);
+	unsigned n = 8;
+	unsigned tb[n] = {4,8,16,32,64,128,256,512};
 
-	struct timeval ti, tf;
-	double ttimep, ttimeq;
+	for(unsigned i=64; i<=2048; i*=2){
+		type **a = new type*[i];
+		type **b = new type*[i];
+		type **r = new type*[i];
 
-	gettimeofday(&ti, NULL);
-	blocked_mult(a,b,r2,t,bl);
-	gettimeofday(&tf, NULL);
-	ttimeq = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;	
+		init_m(a,b,i);
+		init_r(r,i);
 
-	gettimeofday(&ti, NULL);
-	normal_mult(a,b,r1,t);
-	gettimeofday(&tf, NULL);
-	ttimep = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;		
+		gettimeofday(&ti, NULL);
+			normal_mult(a,b,r,i);
+		gettimeofday(&tf, NULL);
+		ttime = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
+		printf("%d & %.7f & ", i, ttime/1000);
+		delete []r;
 
-	printf("time normal_mult %.10f s\n", ttimep/1000);
-	printf("time blocked_mult %.10f s\n", ttimeq/1000);
-		
-	// print(r1,t);
-	// print(r2,t);
+		for(unsigned j=0; j<n; j++){
+			type **r = new type*[i];
+			init_r(r,i);
 
-	delete []a;		delete []b;
-	delete []r1;	delete []r2;
+			gettimeofday(&ti, NULL);
+				blocked_mult(a,b,r,i,tb[j]);
+			gettimeofday(&tf, NULL);
+
+			ttime = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
+			printf("%.7f & ", ttime/1000);
+			delete []r;
+		}
+		cout << "\n";
+		delete []a;		delete []b;		
+	}*/
 	return 0;
 }
+
+// plot "o.dat" using 1:2 w l title "normal", "" using 1:3 w l title "B4", "" using 1:4 w l title "B8", "" using 1:5 w l title "B16", "" using 1:6 w l title "B32", "" using 1:7 w l title "B64", "" using 1:8 w l title "B128", "" using 1:9 w l title "B256", "" using 1:10 w l title "B512";
+// plot "o2.dat" using 1:2 w l title "normal", "" using 1:3 w l title "B4", "" using 1:4 w l title "B8", "" using 1:5 w l title "B16", "" using 1:6 w l title "B32", "" using 1:7 w l title "B64", "" using 1:8 w l title "B128", "" using 1:9 w l title "B256", "" using 1:10 w l title "B512";
+// plot "o3.dat" using 1:2 w l title "normal", "" using 1:3 w l title "B4", "" using 1:4 w l title "B8", "" using 1:5 w l title "B16", "" using 1:6 w l title "B32", "" using 1:7 w l title "B64", "" using 1:8 w l title "B128", "" using 1:9 w l title "B256", "" using 1:10 w l title "B512";
