@@ -62,7 +62,7 @@ void blocked_mult(T **a, T **b, T **r, unsigned t, unsigned bl){
 typedef int type;
 int main(int argc, char const *argv[]){
 
-	unsigned t = 64, bl = 4;
+	unsigned t = 400, bl = 6;
 	type **a = new type*[t];
 	type **b = new type*[t];
 	type **r1 = new type*[t];
@@ -74,14 +74,14 @@ int main(int argc, char const *argv[]){
 	double ttimep, ttimeq;
 
 	gettimeofday(&ti, NULL);
-	normal_mult(a,b,r1,t);
-	gettimeofday(&tf, NULL);
-	ttimep = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;	
-
-	gettimeofday(&ti, NULL);
 	blocked_mult(a,b,r2,t,bl);
 	gettimeofday(&tf, NULL);
 	ttimeq = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;	
+
+	gettimeofday(&ti, NULL);
+	normal_mult(a,b,r1,t);
+	gettimeofday(&tf, NULL);
+	ttimep = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;		
 
 	printf("time normal_mult %.10f s\n", ttimep/1000);
 	printf("time blocked_mult %.10f s\n", ttimeq/1000);
