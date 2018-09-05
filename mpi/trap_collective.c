@@ -46,15 +46,14 @@ int main(int argc, char const *argv[]){
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);	// MPI my process ID
 	MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);	// number of process
 
-	// get data
 	get_input(my_rank, comm_sz, &a, &b, &n);
 
 	h = (b-a)/n;
 	local_n = n/comm_sz; // number of own n
 
-	local_a = a+(my_rank*local_n*h);
-	local_b = local_a + (local_n*h);
-	local_int = trapez(local_a, local_b, local_n, h);
+	local_a = a+(my_rank*local_n*h);	// setea el inicio del x en el intervalo
+	local_b = local_a + (local_n*h);	// igual el final
+	local_int = trapez(local_a, local_b, local_n, h);	// hallas con la operación
 
 	MPI_Reduce(&local_int, &total_int, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 

@@ -17,6 +17,8 @@ void get_input(int my_rank, int comm_sz, double *a, double *b, int *n){
 			MPI_Send(b, 1, MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
 			MPI_Send(n, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
 		}
+		// Empieza y envia los datos ingresados de a, b, n
+		// a los demas procesos
 	}
 	else{
 		// receive from all 
@@ -55,10 +57,10 @@ int main(int argc, char const *argv[]){
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);	// MPI my process ID
 	MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);	// number of process
 
-	// get data
+	// get data in each process
 	get_input(my_rank, comm_sz, &a, &b, &n);
 
-	h = (b-a)/n;
+	h = (b-a)/n;	
 	local_n = n/comm_sz; // number of own n
 
 	local_a = a+(my_rank*local_n*h);
@@ -66,6 +68,7 @@ int main(int argc, char const *argv[]){
 	local_int = trapez(local_a, local_b, local_n, h);
 
 	if(my_rank != 0){
+		// emvia a los slaves la tarea
 		MPI_Send(&local_int, 1,MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 	}
 	else{
