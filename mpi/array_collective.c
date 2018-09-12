@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <mpi.h>
 
-int tam = 16;
+int tam = 10;
 
 int add(int *a, unsigned t){
 	int partial = 0;
@@ -26,7 +26,7 @@ int main(int argc, char const *argv[]){
 
 	if(my_rank == 0){
 		for(i=0; i<tam; i++)	// lleno el vector
-			vect[i] = i;
+			vect[i] = i+1;
 
 		sp = 0;
 		for(i=1; i<comm_sz; i++){

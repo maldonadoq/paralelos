@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <mpi.h>
 
-int tam = 16;
+int tam = 10;
 
 int main(int argc, char const *argv[]){
 	int my_rank, comm_sz;

@@ -82,11 +82,10 @@ int main(int argc, char **argv){
    *  the different communication modes 
    *  ------------------------------------------------------------------ */  
 
-  if ( rank == 0 )  {
-    /* initialize all message contents */
+  if(rank == 0){
     for ( i=0; i<NMSG; i++ )
       for ( j=0; j<mlen; j++ )
-	message[i][j] = (float)i;
+	     message[i][j] = (float)i;
 
     /* receive empty message, indicating all receives have been posted */
     count = 0;
