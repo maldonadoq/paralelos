@@ -23,13 +23,13 @@ void *tokenize(void *rank){
 	sem_post(&sems[next]);
 
 	while(fg_rv != NULL){
-		printf("Thread %ld > my line = %s", my_rank, my_line);
+		printf("Thread %ld > my line = %s\n", my_rank, my_line);
 
 		count = 0; 
 		my_string = strtok_r(my_line, " \t\n", &saveptr);
 		while(my_string != NULL){
 			count++;
-			printf("Thread %ld > string %d = %s\n", my_rank, count, my_string);
+			printf("\tThread %ld > string %d = %s\n", my_rank, count, my_string);
 			my_string = strtok_r(NULL, " \t\n", &saveptr);
 		} 
 

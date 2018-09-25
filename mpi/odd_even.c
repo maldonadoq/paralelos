@@ -154,7 +154,7 @@ int main(int argc, char const *argv[]){
 
 	srand(time(NULL));
 	for(int i=0; i<local_n; i++)
-		local_vec[i] = rand()%n;
+		local_vec[i] = rand()%(n*10);
 
 	sort(local_vec, local_n, my_rank, comm_sz, comm);
 	print(local_vec, local_n, my_rank, comm_sz, comm);

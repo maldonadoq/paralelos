@@ -178,27 +178,23 @@ bool ldelete(int value) {
 	return true;
 }
 
-void* thread_opt(void *rank){
-	int my_rank = (int)rank;
+void* thread_opt(){
+
 	int thopt = nopt/thc;
 
 	int i, opt, val;
-	int lcinsert, lcdelete, lcsearch;
 	for(i=0; i<thopt; i++){
 		opt = rand()%nopt;
 		val = rand()%max;
 
 		if(opt < nsearch){
 			lsearch(val);
-			lcsearch++;
 		}
 		else if(opt < nsearch+ninsert){
 			linsert(val);
-			lcinsert++;
 		}
 		else{
 			ldelete(val);
-			lcdelete++;
 		}
 	}
 
@@ -206,10 +202,10 @@ void* thread_opt(void *rank){
 }
 
 int main(int argc, char const *argv[]){
-	thc = 4;
-	ninsert = 9900;
-	ndelete = 50;
-	nsearch = 50;
+	thc = 5;
+	ninsert = 16000;
+	ndelete = 2000;
+	nsearch = 2000;
 	nopt = ninsert+ndelete+nsearch;
 	max = nopt*10;
 		
@@ -222,14 +218,14 @@ int main(int argc, char const *argv[]){
 
     gettimeofday(&ti, NULL);	
 	for(i=0; i<thc; i++)
-		pthread_create(&threads[i], NULL, thread_opt, (void *)i);
+		pthread_create(&threads[i], NULL, thread_opt, NULL);
 
 	for(i=0; i<thc; i++)
 		pthread_join(threads[i], NULL);	
 	gettimeofday(&tf, NULL);
 
     time = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;   
-    lprint();
+    //lprint();
     printf("Time: %.6lf s\n",time/1000);
 
 	lfree();

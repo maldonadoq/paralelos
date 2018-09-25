@@ -3,59 +3,61 @@
 #include <time.h>
 #include <mpi.h>
 
-void allocate(double **local_mat, double **local_x, double** local_y, 
+int number_max = 10;
+
+void allocate(int **local_mat, int **local_x, int** local_y, 
    int local_m, int n, int local_n, MPI_Comm comm){
 
-   *local_mat = malloc(local_m*n*sizeof(double));
-   *local_x = malloc(local_n*sizeof(double));
-   *local_y = malloc(local_m*sizeof(double));
+   *local_mat = malloc(local_m*n*sizeof(int));
+   *local_x = malloc(local_n*sizeof(int));
+   *local_y = malloc(local_m*sizeof(int));
 }
 
-void read_matrix(double *local_mat, int m, int local_m,
+void read_matrix(int *local_mat, int m, int local_m,
     int n, int my_rank, MPI_Comm comm){
-    double *mat = NULL;
+    int *mat = NULL;
 
     if(my_rank == 0){
-        mat = malloc(m*n*sizeof(double));
+        mat = malloc(m*n*sizeof(int));
         srand(time(NULL));
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
-                mat[(i*n) + j] = ((double) rand() / (RAND_MAX));
+                mat[(i*n) + j] = rand()%number_max;
             }
         }
 
-        MPI_Scatter(mat, local_m*n, MPI_DOUBLE, local_mat, local_m*n, MPI_DOUBLE, 0, comm);
+        MPI_Scatter(mat, local_m*n, MPI_INT, local_mat, local_m*n, MPI_INT, 0, comm);
         free(mat);
     }
     else{
-        MPI_Scatter(mat, local_m*n, MPI_DOUBLE, local_mat, local_m*n, MPI_DOUBLE, 0, comm);
+        MPI_Scatter(mat, local_m*n, MPI_INT, local_mat, local_m*n, MPI_INT, 0, comm);
     }
 }
 
-void read_vector(double *local_vec, int n, int local_n, int my_rank, MPI_Comm comm){
-    double *vec = NULL;
+void read_vector(int *local_vec, int n, int local_n, int my_rank, MPI_Comm comm){
+    int *vec = NULL;
 
     if(my_rank == 0){
-        vec = malloc(n*sizeof(double));
+        vec = malloc(n*sizeof(int));
 
         srand(time(NULL));
-        for(int i=0; i<n; i++)  vec[i] = ((double) rand() / (RAND_MAX));
+        for(int i=0; i<n; i++)  vec[i] = rand()%number_max;
 
-        MPI_Scatter(vec, local_n, MPI_DOUBLE, local_vec, local_n, MPI_DOUBLE, 0, comm);
+        MPI_Scatter(vec, local_n, MPI_INT, local_vec, local_n, MPI_INT, 0, comm);
         free(vec);
     }
     else{
-        MPI_Scatter(vec, local_n, MPI_DOUBLE, local_vec, local_n, MPI_DOUBLE, 0, comm);
+        MPI_Scatter(vec, local_n, MPI_INT, local_vec, local_n, MPI_INT, 0, comm);
     }
 }
 
-void mat_vect_mult(double *local_mat, double *local_x, double *local_y,
+void mat_vect_mult(int *local_mat, int *local_x, int *local_y,
     int local_m, int n, int local_n, MPI_Comm comm){
-    double *x;
+    int *x;
     int local_i, j;
 
-    x = malloc(n*sizeof(double));
-    MPI_Allgather(local_x, local_n, MPI_DOUBLE, x, local_n, MPI_DOUBLE, comm);
+    x = malloc(n*sizeof(int));
+    MPI_Allgather(local_x, local_n, MPI_INT, x, local_n, MPI_INT, comm);
 
     for (local_i = 0; local_i < local_m; local_i++) {
         local_y[local_i] = 0.0;
@@ -65,27 +67,27 @@ void mat_vect_mult(double *local_mat, double *local_x, double *local_y,
     free(x);
 }
 
-void print_vector(double *local_vec, int n, int local_n, int my_rank, MPI_Comm comm){
-    double* vec = NULL;
+void print_vector(int *local_vec, int n, int local_n, int my_rank, MPI_Comm comm){
+    int* vec = NULL;
 
     if (my_rank == 0) {
-        vec = malloc(n*sizeof(double));
+        vec = malloc(n*sizeof(int));
         
-        MPI_Gather(local_vec, local_n, MPI_DOUBLE, vec, local_n, MPI_DOUBLE, 0, comm);      
+        MPI_Gather(local_vec, local_n, MPI_INT, vec, local_n, MPI_INT, 0, comm);
         for(int i = 0; i < n; i++)
-            printf("%.3f ", vec[i]);
+            printf("%d ", vec[i]);
         printf("\n");
         
         free(vec);
     }
     else{
-      MPI_Gather(local_vec, local_n, MPI_DOUBLE, vec, local_n, MPI_DOUBLE, 0, comm);
+      MPI_Gather(local_vec, local_n, MPI_INT, vec, local_n, MPI_INT, 0, comm);
    }
 }
 
 int main(int argc, char const *argv[]){
-    double *local_mat;
-    double *local_x, *local_y;
+    int *local_mat;
+    int *local_x, *local_y;
 
     int m, local_m, n, local_n;
     int my_rank, comm_sz;
@@ -97,8 +99,8 @@ int main(int argc, char const *argv[]){
     MPI_Comm_size(comm, &comm_sz);
     MPI_Comm_rank(comm, &my_rank);
 
-    m = 28000;
-    n = 2800000;
+    n = 4;
+    m = 4;    
 
     MPI_Bcast(&m, 1, MPI_INT, 0, comm);
     MPI_Bcast(&n, 1, MPI_INT, 0, comm);

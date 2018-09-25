@@ -99,8 +99,7 @@ void lfree(){
 	free(curr);
 }
 
-void* thread_opt(void *rank){
-	int my_rank = (int)rank;
+void* thread_opt(){
 	int thopt = nopt/thc;
 
 	int i, opt, val;
@@ -128,10 +127,10 @@ void* thread_opt(void *rank){
 }
 
 int main(int argc, char const *argv[]){
-	thc = 4;
-	ninsert = 9900;
-	ndelete = 50;
-	nsearch = 50;
+	thc = 6;
+	ninsert = 16000;
+	ndelete = 2000;
+	nsearch = 2000;
 	nopt = ninsert+ndelete+nsearch;
 	max = nopt*10;
 
@@ -145,7 +144,7 @@ int main(int argc, char const *argv[]){
 
     gettimeofday(&ti, NULL);	
 	for(i=0; i<thc; i++)
-		pthread_create(&threads[i], NULL, thread_opt, (void *)i);
+		pthread_create(&threads[i], NULL, thread_opt, NULL);
 
 	for(i=0; i<thc; i++)
 		pthread_join(threads[i], NULL);	
