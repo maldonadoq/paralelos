@@ -145,7 +145,7 @@ int main(int argc, char const *argv[]){
 
 	MPI_Bcast(&n, 1, MPI_INT, 0, comm);
 
-	n = 1600;
+	n = 16;
 	//n = 65536; // 2^16
 	//n = 16777216; // 2^24
 	local_n = n/comm_sz;
@@ -154,7 +154,7 @@ int main(int argc, char const *argv[]){
 
 	srand(time(NULL));
 	for(int i=0; i<local_n; i++)
-		local_vec[i] = rand()%(n*10);
+		local_vec[i] = rand()%n;
 
 	sort(local_vec, local_n, my_rank, comm_sz, comm);
 	print(local_vec, local_n, my_rank, comm_sz, comm);

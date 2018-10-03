@@ -127,10 +127,10 @@ void* thread_opt(){
 }
 
 int main(int argc, char const *argv[]){
-	thc = 3;
-	ninsert = 16000;
+	thc = 6;
+	ninsert = 2000;
 	ndelete = 2000;
-	nsearch = 2000;
+	nsearch = 16000;
 	nopt = ninsert+ndelete+nsearch;
 	max = nopt*10;
 		

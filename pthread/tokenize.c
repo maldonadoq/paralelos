@@ -30,13 +30,11 @@ void *tokenize(void *rank){
 			count++;
 			printf("\tThread %ld > string %d = %s\n", my_rank, count, my_string);
 			my_string = strtok(NULL, " \t\n");
-		} 
-
-		//if(my_line != NULL)	printf("Thread %ld > After tokenizing, my_line = %s\n", my_rank, my_line);
+		}
 
 		sem_wait(&sems[my_rank]); 
 		fg_rv = fgets(my_line, max, stdin);
-		sem_post(&sems[next]);
+		seem_post(&sems[next]);
 	}
 
 	return NULL;
@@ -52,7 +50,8 @@ int main(int argc, char const *argv[]){
 	sem_init(&sems[0],0,1);
 
 	int i;
-	for(i=1; i<thc; i++)	sem_init(&sems[i],0,0);	
+	for(i=1; i<thc; i++)
+		sem_init(&sems[i],0,0);	
 
 	// printf("Text: \t");
 	for(i=0; i<thc; i++)

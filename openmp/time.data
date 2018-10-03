@@ -1,0 +1,65 @@
+5.2
+thc 2	integral: 666.6666666666827723
+thc 3	integral: 666.6666466666885071
+thc 4	integral: 666.6666666667144909
+thc 5	integral: 666.6666666667570098
+thc 6	integral: 666.6665866667234468
+thc 7	integral: 666.6666266667109539
+thc 8	integral: 666.6666666667139225
+thc 9	integral: 666.6666466666957831
+
+Falla con un número de threads de: 3 - 6 - 7 - 9.
+Esto se debe a que no se esta controlando la sección critica, y da el mismo problema que con pthreads!!
+
+5.3	
+double start_time = omp_get_wtime();
+
+#pragma omp parallel num_threads(thc) reduction(+: result)
+    result += local_trap(a, b, n);
+
+#pragma omp barrier
+
+double end_time = omp_get_wtime();
+printf("integral: %.8lf\n", result);   
+printf("time: %.6lf s\n", end_time-start_time);
+
+a = -10;
+b = 10;
+n = 100000000
+
+	Trap normal 1th
+		integral: 666.66666667
+		time: 2.299958 s
+	Trap reduction 1th
+		integral: 666.66666667
+		time: 2.314156 s
+		
+
+	Trap normal 2th
+		integral: 666.66666667
+		time: 1.148361 s
+	Trap reduction 2th
+		integral: 666.66666667
+		time: 1.163225 s
+
+5.6
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <omp.h>
+
+#define THREADS 2
+#define N 4
+
+int main(int argc, char const *argv[]){
+	int i;
+	#pragma omp parallel for schedule(static) num_threads(THREADS)
+		for(i = 0; i < N; i++){
+			printf("Thread %d: Iterations %d.\n", omp_get_thread_num(), i);
+		}
+
+	return 0;
+}
+
+5.7
+Cuando se ejecuta un thread da la respuesta correcta porque se convierte en secuencial, en cambio al ser mas de dos threads da error porque no tienen el private que les dará su propio variable a cada threads y por eso hay conflicto.
