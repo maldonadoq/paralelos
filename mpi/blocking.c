@@ -10,6 +10,8 @@
 #define BUF_ALLOC 4
 #define GO 10
 
+// extract from https://ldc.usb.ve/~ibanez/docencia/MPI/index.html
+
 void print_time ( int event, struct timeval tbegin, struct timeval tend ){
   int dt;
   dt = ( tend.tv_sec - tbegin.tv_sec ) * 1000000 + tend.tv_usec 
