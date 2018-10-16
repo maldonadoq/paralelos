@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+//sudo apt-add-repository ppa:vokoscreen-dev/vokoscreen sudo apt-get update sudo apt-get install vokoscreen
+
 using namespace std;
 
 template<class T>
