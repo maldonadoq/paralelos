@@ -4,8 +4,8 @@
 int tam = 10;
 
 int add(int *a, unsigned t){
-	int partial = 0;
-	for(unsigned i=0; i<t; i++){
+	int partial = 0, i;
+	for(i=0; i<t; i++){
 		partial += a[i];
 	}
 	
@@ -14,35 +14,37 @@ int add(int *a, unsigned t){
 
 int main(int argc, char const *argv[]){
 	int my_rank, comm_sz;
-	int vect[tam], part, sp, i;
+	int vect[tam], part, i;
 	int sum_local, sum_total;
 
 	MPI_Init(NULL,NULL);
 
-	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);	// MPI my process ID
-	MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);	// number of process
+	MPI_Comm comm = MPI_COMM_WORLD;
+	MPI_Comm_rank(comm, &my_rank);	// MPI my process ID
+	MPI_Comm_size(comm, &comm_sz);	// number of process
 
-	part = tam/(comm_sz-1);
+	part = tam/(comm_sz-1);	
 
 	if(my_rank == 0){
-		for(i=0; i<tam; i++)	// lleno el vector
-			vect[i] = i+1;
+		for(i=0; i<tam; i++){	// lleno el vector
+			vect[i] = i;
+			printf("%d ", vect[i]);
+		}
+		printf("\n");
 
-		sp = 0;
 		for(i=1; i<comm_sz; i++){
-			MPI_Send(&vect[sp], part, MPI_INT, i, 0, MPI_COMM_WORLD);
-			sp = sp + part;	// salto para empezar en el otro array
+			MPI_Send(&vect[(i-1)*part], part, MPI_INT, i, 0, comm);
 		}
 	}
 	else{			
-		MPI_Recv(&vect[0], part, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);			
+		MPI_Recv(vect, part, MPI_INT, 0, 0, comm, MPI_STATUS_IGNORE);			
 	}
 
 	sum_local = add(vect, part);
-	MPI_Reduce(&sum_local, &sum_total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_Reduce(&sum_local, &sum_total, 1, MPI_INT, MPI_SUM, 0, comm);
 
 	if(my_rank == 0){
-		printf("Total: %d\n", sum_total);
+		printf("Total: %d\n", sum_total-sum_local);
 	}
 	MPI_Finalize();
 
