@@ -49,3 +49,15 @@ int main(int argc, char const *argv[]){
 
 	return 0;
 }
+
+/*
+	El número de tile_width en el archivo src/matrix.h esta definido por el tamaño de bloques,
+	en si mi maquina soporta 1024 threads por bloque, y por cada thread usa un elemento de la 
+	matriz en shared memory, por lo tanto cada matrix en shared memory debe ser del mismo tamaño
+	que el bloque, tile_width = block" 
+
+compile:
+	nvcc square_matrix_mult.cu -o square_matrix_mult.out
+run:
+	./square_matrix_mult.out
+*/
