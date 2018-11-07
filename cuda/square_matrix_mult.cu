@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]){
 	gettimeofday(&tf, NULL);
 	time = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
 	printf("[%ix%i] shared memory time: %.8lf s\n", width, width, time/1000);
-	// print_matrix(h_r, width, width);
+	print_matrix(h_r, width, width);
 
 	delete h_m;
 	delete h_n;
