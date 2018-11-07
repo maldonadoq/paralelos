@@ -29,8 +29,10 @@ void gray_scale(pixel *in, float *h_out, unsigned col, unsigned row){
 	cudaMemcpy(d_in, in, msize, cudaMemcpyHostToDevice);
 
 	unsigned block = 16;
+    
 	dim3 dimGrid(ceil(col/block), ceil(row/block), 1);
 	dim3 dimBlock(block, block, 1);
+
 	gray_scale_kernel<<<dimGrid, dimBlock>>>(d_in, d_out, col, row);
 
 	cudaMemcpy(h_out, d_out, rsize, cudaMemcpyDeviceToHost);
