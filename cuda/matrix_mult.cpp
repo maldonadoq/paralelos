@@ -18,8 +18,7 @@ void normal_mult(T **a, T **b, T **r, unsigned t){
 
 int main(int argc, char const *argv[]){	
 
-	unsigned t = 1024;
-
+	unsigned t = 1024
 	int **a = new int*[t];
 	int **b = new int*[t];
 	int **r = new int*[t];
@@ -43,7 +42,7 @@ int main(int argc, char const *argv[]){
 		normal_mult(a,b,r,t);
 	gettimeofday(&tf, NULL);
 	time = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
-	printf("[%ix%i] time: %.8lf s\n", t, t, time/1000);
+	printf("[%ix%i] cpu time: %.8lf s\n", t, t, time/1000);
 	// print_matrix(r, t, t);
 
 	delete []a;
