@@ -22,6 +22,7 @@ int main(int argc, char const *argv[]){
 
 	pixel *in = new pixel[cols*rows];
 	pixel *blur = new pixel[cols*rows];
+	float block = 32;
 
 	unsigned i, j; //tmp;
 	for(i=0; i<rows; i++){
@@ -32,7 +33,7 @@ int main(int argc, char const *argv[]){
 		}
 	}	
 
-	kblur(in, blur, cols, rows);
+	kblur(in, blur, cols, rows, block);
 
 	cv::Mat src_out(rows, cols, CV_8UC3, cv::Scalar(0,0,0));
 	for(i=0; i<rows; i++){

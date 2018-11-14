@@ -5,15 +5,14 @@
 #include "../src/print.h"
 
 int main(int argc, char const *argv[]){	
-	unsigned width = 1024;
-	unsigned block = 32;
+	unsigned width = 20;
+	unsigned block = 16;
 
 	unsigned ntotal = width*width;	
 
 	int *h_m = new int[ntotal];
 	int *h_n = new int[ntotal];
 	int *h_p = new int[ntotal];
-	int *h_r = new int[ntotal];
 
 	unsigned i, j;
 	for(i=0; i<width; i++){
@@ -21,7 +20,6 @@ int main(int argc, char const *argv[]){
 		    h_m[(i*width)+j] = j;
 		    h_n[(i*width)+j] = j;
 		    h_p[(i*width)+j] = 0;
-		    h_r[(i*width)+j] = 0;
 		}
 	}
 		
@@ -29,23 +27,14 @@ int main(int argc, char const *argv[]){
 	double time;
 
 	gettimeofday(&ti, NULL);
-		square_matrix_mult(h_m, h_n, h_p, width, block, 'n');
+		square_matrix_sum(h_m, h_n, h_p, width, block);
 	gettimeofday(&tf, NULL);
 	time = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
-	printf("[%ix%i] global memory time: %.8lf s\n", width, width, time/1000);
-	// print_matrix(h_p, width, width);
+	printf("[%ix%i] time: %.8lf s\n", width, width, time/1000);	
 
-	gettimeofday(&ti, NULL);
-		square_matrix_mult(h_m, h_n, h_r, width, block, 't');
-	gettimeofday(&tf, NULL);
-	time = (tf.tv_sec - ti.tv_sec)*1000 + (tf.tv_usec - ti.tv_usec)/1000;
-	printf("[%ix%i] shared memory time: %.8lf s\n", width, width, time/1000);
-	// print_matrix(h_r, width, width);
+	print_matrix(h_p, width, width);
 
-	delete h_m;
-	delete h_n;
+	delete h_m; delete h_n;
 	delete h_p;
-	delete h_r;
-
 	return 0;
 }

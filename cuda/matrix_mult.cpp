@@ -18,7 +18,7 @@ void normal_mult(T **a, T **b, T **r, unsigned t){
 
 int main(int argc, char const *argv[]){	
 
-	unsigned t = 1024
+	unsigned t = 1024;
 	int **a = new int*[t];
 	int **b = new int*[t];
 	int **r = new int*[t];

@@ -37,8 +37,8 @@ void blur_kernel(pixel *in, pixel *out, unsigned w, unsigned h){
     }
 }
 
-void kblur(pixel *h_in, pixel *h_gray, unsigned col, unsigned row){
-    unsigned size = col*row*sizeof(pixel);
+void kblur(pixel *h_in, pixel *h_gray, float col, float row, float block){
+    unsigned size = (unsigned)col*row*sizeof(pixel);
 
     pixel *d_in;
     pixel *d_out;
@@ -48,7 +48,6 @@ void kblur(pixel *h_in, pixel *h_gray, unsigned col, unsigned row){
 
 	cudaMemcpy(d_in, h_in, size, cudaMemcpyHostToDevice);
 
-	unsigned block = 30;
 	dim3 dimGrid(ceil(col/block), ceil(row/block), 1);
 	dim3 dimBlock(block, block, 1);
 	blur_kernel<<<dimGrid, dimBlock>>>(d_in, d_out, col, row);

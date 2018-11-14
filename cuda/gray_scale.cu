@@ -16,6 +16,7 @@ int main(int argc, char const *argv[]){
 
 	unsigned cols = src_in.cols;
 	unsigned rows = src_in.rows;
+	float block = 32;
 
 	std::cout << "cols: " << cols << "\n";
 	std::cout << "rows: " << rows << "\n";
@@ -33,7 +34,7 @@ int main(int argc, char const *argv[]){
 		}
 	}
 
-	gray_scale(in, out, cols, rows);
+	gray_scale(in, out, cols, rows, block);
 
 	cv::Mat src_out(rows,cols, CV_8UC3, cv::Scalar(0,0,0));	
 	for(i=0; i<rows; i++){

@@ -3,6 +3,8 @@
 
 #define tile_width 32
 
+
+// kernel function to normal_square_matrix_mult_kernel
 __global__
 void normal_square_matrix_mult_kernel(int *m, int *n, int *p, unsigned width){
 	unsigned col = threadIdx.x+(blockIdx.x*blockDim.x);
@@ -18,6 +20,7 @@ void normal_square_matrix_mult_kernel(int *m, int *n, int *p, unsigned width){
 	}
 }
 
+// kernel function to tile_square_matrix_mult_kernel
 __global__
 void tile_square_matrix_mult_kernel(int *m, int *n, int *p, unsigned width){
 	__shared__ int mds[tile_width][tile_width];
@@ -48,7 +51,8 @@ void tile_square_matrix_mult_kernel(int *m, int *n, int *p, unsigned width){
 	p[(row*width)+col] = pvalue;
 }
 
-void square_matrix_mult(int *m, int *n, int *p, unsigned width, unsigned block, char type){
+// function host to call device kernel_mult
+void square_matrix_mult(int *m, int *n, int *p, float width, float block, char type){
 	unsigned size = width*width*sizeof(int);
 	int *d_m, *d_n, *d_p;
 
@@ -78,6 +82,75 @@ void square_matrix_mult(int *m, int *n, int *p, unsigned width, unsigned block, 
 
 	cudaFree(d_m);
 	cudaFree(d_n);
+	cudaFree(d_p);
+}
+
+// function kernel to sum
+__global__
+void square_matrix_sum_kernel(int *m, int *n, int *p, unsigned width){
+	unsigned col = threadIdx.x+(blockIdx.x*blockDim.x);
+	unsigned row = threadIdx.y+(blockIdx.y*blockDim.y);
+
+	if(col<width and row<width){
+		p[(row*width)+col] = m[(row*width)+col]+n[(row*width)+col];
+	}
+}
+
+// function host to call device kernel_mult
+void square_matrix_sum(int *m, int *n, int *p, float width, float block){
+	unsigned size = width*width*sizeof(int);
+	int *d_m, *d_n, *d_p;
+
+	cudaMalloc((void **)&d_m, size);
+	cudaMalloc((void **)&d_n, size);
+	cudaMalloc((void **)&d_p, size);
+
+	cudaMemcpy(d_m, m, size, cudaMemcpyHostToDevice);	
+	cudaMemcpy(d_n, n, size, cudaMemcpyHostToDevice);	
+
+	dim3 dimGrid(ceil(width/block), ceil(width/block), 1);
+	dim3 dimBlock(block, block, 1);
+
+	
+	square_matrix_sum_kernel<<<dimGrid, dimBlock>>>(d_m, d_n, d_p, width);			
+
+	cudaMemcpy(p, d_p, size, cudaMemcpyDeviceToHost);
+
+	cudaFree(d_m);
+	cudaFree(d_n);
+	cudaFree(d_p);
+}
+
+// matrix - vector
+__global__
+void square_matrix_vector_mult_kernel(int *m, int *v, int *p, unsigned width){
+	unsigned idx = threadIdx.x+(blockIdx.x*blockDim.x);
+	if(idx<width){		
+		for(unsigned i=0; i<width; i++){
+			p[idx] += m[(idx*width)+i]*v[i];
+		}
+	}
+}
+
+// function host to call device kernel_mult
+void square_matrix_vector_mult(int *m, int *v, int *p, float width, float block){
+	unsigned msize = width*width*sizeof(int);
+	unsigned vsize = width*sizeof(int);
+	int *d_m, *d_v, *d_p;
+
+	cudaMalloc((void **)&d_m, msize);
+	cudaMalloc((void **)&d_v, vsize);
+	cudaMalloc((void **)&d_p, vsize);
+
+	cudaMemcpy(d_m, m, msize, cudaMemcpyHostToDevice);	
+	cudaMemcpy(d_v, v, vsize, cudaMemcpyHostToDevice);	
+	
+	square_matrix_vector_mult_kernel<<<ceil(width/block), block>>>(d_m, d_v, d_p, width);
+
+	cudaMemcpy(p, d_p, vsize, cudaMemcpyDeviceToHost);
+
+	cudaFree(d_m);
+	cudaFree(d_v);
 	cudaFree(d_p);
 }
 

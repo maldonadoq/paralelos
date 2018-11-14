@@ -16,9 +16,9 @@ void gray_scale_kernel(pixel *in, float *gray, unsigned col, unsigned row){
     }
 }
 
-void gray_scale(pixel *in, float *h_out, unsigned col, unsigned row){
-    unsigned msize = col*row*sizeof(pixel);     // pixel vector
-    unsigned rsize = col*row*sizeof(float);     // float vector
+void gray_scale(pixel *in, float *h_out, float col, float row, float block){
+    unsigned msize = (unsigned)col*row*sizeof(pixel);     // pixel vector
+    unsigned rsize = (unsigned)col*row*sizeof(float);     // float vector
 
     pixel *d_in;
     float *d_out;
@@ -27,8 +27,6 @@ void gray_scale(pixel *in, float *h_out, unsigned col, unsigned row){
 	cudaMalloc((void **)&d_out, rsize);
 
 	cudaMemcpy(d_in, in, msize, cudaMemcpyHostToDevice);
-
-	unsigned block = 16;
     
 	dim3 dimGrid(ceil(col/block), ceil(row/block), 1);
 	dim3 dimBlock(block, block, 1);
