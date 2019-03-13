@@ -8,7 +8,8 @@ void square_matrix_sum_kernelB(int *m, int *n, int *p, unsigned width){
 	unsigned row = threadIdx.y+(blockIdx.y*blockDim.y);
 
 	if(col<width and row<width){
-		p[(row*width)+col] = m[(row*width)+col]+n[(row*width)+col];
+		unsigned id = (row*width)+col;
+		p[id] = m[id]+n[id];
 	}
 }
 
