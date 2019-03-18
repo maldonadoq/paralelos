@@ -99,8 +99,8 @@ int main(int argc, char const *argv[]){
     MPI_Comm_size(comm, &comm_sz);
     MPI_Comm_rank(comm, &my_rank);
 
-    n = 4;
-    m = 4;    
+    n = 100;
+    m = 100;    
 
     MPI_Bcast(&m, 1, MPI_INT, 0, comm);
     MPI_Bcast(&n, 1, MPI_INT, 0, comm);

@@ -9,7 +9,7 @@ void hello(){
 }
 
 int main(int argc, char const *argv[]){
-	int thc = 4;
+	int thc = 10;
 	
 	#pragma omp parallel num_threads(thc)
 		hello();
